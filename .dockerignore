@@ -1,0 +1,32 @@
+# Node modules (already being copied from image build)
+node_modules
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+.env
+.env.*
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Terraform-related files (if not needed inside container)
+terraform.tfstate
+terraform.tfstate.*
+.terraform
+*.tfbackup
+
+# VSCode settings
+.vscode/

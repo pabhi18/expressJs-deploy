@@ -1,0 +1,38 @@
+name: deploy on aws
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/expressjs-app:latest .
+
+      - name: Push Image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/expressjs-app:latest
+      
+  deploy:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Docker Compose
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        run: |
+          sudo docker-compose down
+          sudo docker-compose up -d
+
